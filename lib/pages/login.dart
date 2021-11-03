@@ -10,8 +10,23 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   @override
+  final _formKey = GlobalKey<FormState>();
   String name = '';
   bool changedButton = false;
+  moveTo(BuildContext context) async {
+    // if (_formKey.currentState!=null && _formKey.currentState.) {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        changedButton = true;
+      });
+      await Future.delayed(Duration(seconds: 1));
+      await Navigator.pushNamed(context, MyRoutes.homeRoute);
+      setState(() {
+        changedButton = false;
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -36,6 +51,7 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       TextFormField(
@@ -45,8 +61,22 @@ class _LoginState extends State<Login> {
                         },
                         decoration: InputDecoration(
                             hintText: "Enter Username", labelText: "UserName"),
+                        validator: (value) {
+                          if (value != null && value.isEmpty) {
+                            return "username Cant be empty";
+                          }
+                          return null;
+                        },
                       ),
                       TextFormField(
+                        validator: (value) {
+                          if (value != null && value.isEmpty) {
+                            return "Password Cant be empty";
+                          } else if (value != null && value.length < 8) {
+                            return "Password should have more than 8 characters";
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                             hintText: "Enter Password", labelText: "password"),
                         obscureText: true,
@@ -71,17 +101,7 @@ class _LoginState extends State<Login> {
                         borderRadius:
                             BorderRadius.circular(changedButton ? 60 : 10),
                         child: InkWell(
-                          onTap: () async {
-                            setState(() {
-                              changedButton = true;
-                            });
-                            await Future.delayed(Duration(seconds: 1));
-                            await Navigator.pushNamed(
-                                context, MyRoutes.homeRoute);
-                            setState(() {
-                              changedButton = false;
-                            });
-                          },
+                          onTap: () => moveTo(context),
                           child: AnimatedContainer(
                             duration: Duration(seconds: 1),
                             width: (changedButton) ? 120 : 140,
