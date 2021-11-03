@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_catalog/widgets/drawer.dart';
 
 class Homepage extends StatelessWidget {
   @override
@@ -10,7 +11,7 @@ class Homepage extends StatelessWidget {
       body: Center(
         child: Text('Welcome to day 2'),
       ),
-      drawer: Drawer(),
+      drawer: MyDrawer(),
     );
   }
 }
